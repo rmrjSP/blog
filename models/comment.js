@@ -17,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'parent_comment_id'
       })
     }
-
   };
   Comment.init({
     author_name: DataTypes.STRING,
@@ -25,19 +24,25 @@ module.exports = (sequelize, DataTypes) => {
     commented_on: DataTypes.DATE,
     article_id: DataTypes.INTEGER,
     parent_comment_id: DataTypes.INTEGER,
+    is_deleted: DataTypes.BOOLEAN,
     commentedAgo: {
       type: DataTypes.VIRTUAL,
       get(){
         let commentedOn = moment(this.commented_on);
         let now = moment();
-        return moment.duration(commentedOn.diff(now)).humanize(true)
+        return moment.duration(commentedOn.diff(now)).humanize(true);
       }
     }
   }, {
     sequelize,
     modelName: 'Comment',
-    timestamps: false,
-    tableName: 'blog_comments'
+    timestamps:false,
+    tableName:'blog_comments',
+    defaultScope: {
+      where: {
+        parent_comment_id: null
+      }
+    }
   });
   return Comment;
 };

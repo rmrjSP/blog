@@ -18,9 +18,13 @@ module.exports = (sequelize, DataTypes) => {
       });
       Article.hasMany(models.Comment, {
         as: 'comments',
-        foreignKey:'article_id'
+        foreignKey: 'article_id'
       });
     }
+    isOwnedBy(user){
+      return this.author_id === user.id
+    }
+
   };
   Article.init({
     title: DataTypes.STRING,
@@ -38,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Article',
-    timestamps:false,
+    timestamps: false,
     tableName: 'blog_articles'
   });
   return Article;
